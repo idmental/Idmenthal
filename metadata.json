@@ -1,0 +1,7 @@
+{
+  "name": "Version 0.1 Photo bot Ai 05.01.2026 ",
+  "description": "An AI-powered photo studio that analyzes photography flaws and virtually re-shoots your images with professional optics, lighting, and composition using Gemini 2.5 Flash Image.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
