@@ -129,7 +129,7 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-black text-zinc-100 flex flex-col">
       {/* Header */}
       <header className="px-6 py-6 border-b border-zinc-900 sticky top-0 bg-black/80 backdrop-blur-xl z-50">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
               <i className="fa-solid fa-wand-magic-sparkles text-white"></i>
@@ -151,7 +151,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-8 flex flex-col">
         {!state.originalUrl ? (
           <div className="max-w-xl mx-auto mt-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="text-center mb-10">
@@ -164,23 +164,27 @@ const App: React.FC = () => {
             <PhotoUploader onUpload={handleUpload} />
           </div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-8 items-start">
-            {/* Visual Area */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="bg-zinc-900/40 rounded-3xl p-4 border border-zinc-800/50 backdrop-blur-sm shadow-2xl">
+          <div className="grid lg:grid-cols-12 gap-8 items-stretch flex-1">
+            {/* Visual Area - Fixed Height Viewport Constraint */}
+            <div className="lg:col-span-8 flex flex-col min-h-0">
+              <div className="flex-1 relative bg-zinc-900/20 rounded-3xl border border-zinc-800/50 backdrop-blur-sm shadow-2xl overflow-hidden flex items-center justify-center p-2 min-h-[500px] lg:min-h-0 lg:max-h-[calc(100vh-200px)]">
                 {state.editedUrl ? (
                   <ComparisonSlider original={state.originalUrl} edited={state.editedUrl} />
                 ) : (
-                  <div className="relative aspect-square md:aspect-video rounded-xl overflow-hidden bg-zinc-950">
-                    <img src={state.originalUrl} className="w-full h-full object-contain" alt="Current" />
-                    {state.isProcessing && (
-                      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center">
+                  <div className="w-full h-full relative flex items-center justify-center">
+                    <img 
+                      src={state.originalUrl} 
+                      className="max-w-full max-h-full object-contain rounded-lg transition-transform duration-500" 
+                      alt="Current" 
+                    />
+                    {(state.isProcessing || state.isAnalyzing) && (
+                      <div className="absolute inset-0 bg-black/60 backdrop-blur-md flex flex-col items-center justify-center z-40 rounded-3xl">
                         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                         <p className="font-semibold text-lg animate-pulse">
-                          Developing Masterpiece...
+                          {state.isAnalyzing ? "Analyzing Composition..." : "Developing Masterpiece..."}
                         </p>
                         <p className="text-zinc-400 text-sm">
-                          Adjusting perspective and lighting
+                          {state.isAnalyzing ? "Checking optics and lighting" : "Applying professional grade edits"}
                         </p>
                       </div>
                     )}
@@ -189,15 +193,15 @@ const App: React.FC = () => {
               </div>
 
               {state.error && (
-                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-xl text-red-200 text-sm flex items-center gap-3">
+                <div className="mt-4 p-4 bg-red-900/20 border border-red-500/50 rounded-xl text-red-200 text-sm flex items-center gap-3">
                   <i className="fa-solid fa-circle-exclamation"></i>
                   {state.error}
                 </div>
               )}
             </div>
 
-            {/* Controls Area */}
-            <div className="space-y-6 lg:sticky lg:top-24 pb-12">
+            {/* Controls Area - Scrollable Column */}
+            <div className="lg:col-span-4 space-y-6 overflow-y-auto pr-1 max-h-[calc(100vh-160px)] custom-scrollbar">
               <div className="bg-zinc-900 rounded-3xl p-6 border border-zinc-800 shadow-xl">
                 <h3 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                   <i className="fa-solid fa-camera-rotate"></i>
@@ -367,7 +371,7 @@ const App: React.FC = () => {
               </div>
 
               {state.editedUrl && (
-                <div className="space-y-4">
+                <div className="pb-8">
                   <a 
                     href={state.editedUrl} 
                     download="visionary_ai_edit.png"
@@ -385,8 +389,24 @@ const App: React.FC = () => {
 
       {/* Footer */}
       <footer className="px-6 py-8 border-t border-zinc-900 text-center">
-        <p className="text-zinc-600 text-xs font-medium">Powered by Gemini 2.5 Flash Image</p>
+        <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Powered by Gemini 2.5 Flash Image • Professional AI Studio</p>
       </footer>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #27272a;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #3f3f46;
+        }
+      `}</style>
     </div>
   );
 };
