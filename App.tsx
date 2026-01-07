@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [cameraView, setCameraView] = useState("default");
   const [autoColor, setAutoColor] = useState(true);
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("1:1");
+  const [cinematicGrade, setCinematicGrade] = useState(false);
 
   const handleUpload = async (base64: string, url: string) => {
     setCurrentBase64(base64);
@@ -65,7 +66,8 @@ const App: React.FC = () => {
         sharpness,
         cameraView,
         zoom,
-        bokeh
+        bokeh,
+        cinematicGrade
       );
       setState(prev => ({ 
         ...prev, 
@@ -100,6 +102,7 @@ const App: React.FC = () => {
     setCameraView("default");
     setAutoColor(true);
     setAspectRatio("1:1");
+    setCinematicGrade(false);
   };
 
   const aspectRatios: { label: string; value: AspectRatio; icon: string }[] = [
@@ -339,6 +342,29 @@ const App: React.FC = () => {
                       className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-gradient-to-r from-zinc-700 to-cyan-400 accent-white disabled:opacity-30"
                       style={{ WebkitAppearance: 'none' }}
                     />
+                  </div>
+
+                  {/* Cinematic Grade Toggle */}
+                  <div className="pt-2">
+                    <button
+                      disabled={state.isProcessing}
+                      onClick={() => setCinematicGrade(!cinematicGrade)}
+                      className={`w-full py-3.5 px-4 rounded-2xl border flex items-center justify-between transition-all group ${
+                        cinematicGrade 
+                          ? 'bg-indigo-600/10 border-indigo-500 text-indigo-300 shadow-[0_0_15px_rgba(79,70,229,0.1)]' 
+                          : 'bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700'
+                      } disabled:opacity-50`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${cinematicGrade ? 'bg-indigo-500 text-white' : 'bg-zinc-900 group-hover:bg-zinc-800'}`}>
+                          <i className="fa-solid fa-clapperboard text-xs"></i>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">Cinematic Color Grade</span>
+                      </div>
+                      <div className={`w-10 h-5 rounded-full relative transition-colors p-1 ${cinematicGrade ? 'bg-indigo-600' : 'bg-zinc-800'}`}>
+                        <div className={`w-3 h-3 bg-white rounded-full transition-all transform ${cinematicGrade ? 'translate-x-5' : 'translate-x-0'}`}></div>
+                      </div>
+                    </button>
                   </div>
 
                   <button 

@@ -56,7 +56,8 @@ export const enhancePhoto = async (
   sharpness: number = 0,
   cameraView: string = "default",
   zoomLevel: number = 0,
-  bokeh: number = 0
+  bokeh: number = 0,
+  cinematicGrade: boolean = false
 ): Promise<string> => {
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
@@ -70,6 +71,10 @@ export const enhancePhoto = async (
 
   if (autoColor) {
     systemContext += "Perform professional auto-color correction: optimize white balance for natural tones and dynamic range. ";
+  }
+
+  if (cinematicGrade) {
+    systemContext += "Apply a high-end professional cinematic color grade. Use sophisticated LUT-style processing with deep blacks, balanced highlights, and a rich, cohesive color palette similar to 35mm film or high-end Hollywood cinematography. ";
   }
 
   if (tone > 10) {
